@@ -170,15 +170,6 @@ This is the automatic reference output from the completed notebook. It contains 
 
 This is the post-run human-audited version of the same experiment. Its `Grounding_Audit` sheet has a `Yes`/`No` judgment and written rationale for every one of the 55 questions. It is the evidence for the reported no-unsupported-facts result; it is not used as an input to the model.
 
-## Reproducibility, checkpointing, and cost
-
-- `TOP_K = 3`, the random seed is `42`, and GPT temperature is `0`.
-- The notebook installs `sentence-transformers`, `openai`, `pydantic`, and `openpyxl`; the Colab runtime provides the remaining common data-science packages.
-- After each successful GPT call, the notebook saves `openrouter_gpt_checkpoint_55q.csv`. If Colab disconnects, rerunning the notebook in the same runtime skips successfully completed questions. Remove that checkpoint from the Colab Files panel only when intentionally starting generation from scratch.
-- The API key is entered through a hidden prompt, is not written to the notebook, and is not exported to Excel.
-- GPT generation incurs a small OpenRouter charge. The workbook's estimate uses the price constants in the notebook; verify current provider pricing before rerunning because prices can change.
-- The generated wording and token cost may vary if OpenRouter routing, the hosted model, package versions, or provider behavior changes.
-
 ## Troubleshooting
 
 | Problem | Likely cause and fix |
