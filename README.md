@@ -170,7 +170,7 @@ It is an explainer/provenance file, not the runtime upload, because its final `C
 
 ### 3. `Clothing_RAG_Complete_Results__55q.xlsx`
 
-This is the automatic reference output from the complete pipeline. It contains retrieval comparisons, GPT answers, exact Top-3 evidence, token/cost estimates, error analyses, and the blank manual-audit template. The two manual columns are empty by design.
+This is the automatic reference output from the completed notebook. It contains retrieval comparisons, GPT answers, exact Top-3 evidence, token/cost estimates, error analyses, and the blank manual-audit template. The two manual columns are empty by design.
 
 ### 4. `Clothing_RAG_Complete_Results_55q_Manual Audited.xlsx`
 
