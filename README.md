@@ -170,19 +170,6 @@ This is the automatic reference output from the completed notebook. It contains 
 
 This is the post-run human-audited version of the same experiment. Its `Grounding_Audit` sheet has a `Yes`/`No` judgment and written rationale for every one of the 55 questions. It is the evidence for the reported no-unsupported-facts result; it is not used as an input to the model.
 
-## Troubleshooting
-
-| Problem | Likely cause and fix |
-|---|---|
-| `NameError` such as `semantic_results is not defined` | Cells were run out of order. Choose **Runtime → Restart session**, then **Run all**. |
-| NumPy/Sentence Transformers import error | The Colab environment contains conflicting package versions. Choose **Runtime → Disconnect and delete runtime**, reopen the notebook, and run all cells from the top. Do not manually upgrade NumPy, pandas, scikit-learn, or torch mid-session. |
-| `401 Incorrect API key` | The key is invalid or is an OpenAI key rather than an OpenRouter key. Use an active OpenRouter `sk-or-...` key without quotation marks or extra spaces. |
-| `402` or insufficient-credit error | Add credit to the OpenRouter account, then rerun the generation cell. The checkpoint prevents duplicate successful calls in the same runtime. |
-| `404` or model-unavailable error | Check whether `openai/gpt-4o-mini` is currently available through OpenRouter. |
-| Workbook validation fails | Upload the exact, unmodified `Clothing_RAG_Test_Key_55_Paraphrase.xlsx` file. It must contain `Test_Key_30` and `Corpus_100`. |
-| Colab disconnects during generation | Reconnect and run from the top in the same runtime if the checkpoint remains; completed questions will be skipped. |
-| Results do not exactly match the included workbook | External model output can vary. Confirm that the same files, model names, Top-K, and fixed question labels were used. |
-
 ## Scope and limitations
 
 This is a course prototype over a fixed 100-review corpus. It answers only evidence-supported fit and quality questions for the selected products. It should not be used to predict returns, make autonomous purchase decisions, provide universal sizing advice, or infer facts not stated in the reviews.
