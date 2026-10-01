@@ -151,7 +151,7 @@ The completed example is provided in `Clothing_RAG_Complete_Results_55q_Manual A
 
 This is the **only Excel input required by the notebook**.
 
-- `Test_Key_30`: all 55 fixed questions, answerability labels, gold Review IDs, supported facts, gold answers, and expected actions. The worksheet name is a legacy label.
+- `Test_Key_30`: all 55 fixed questions, answerability labels, gold Review IDs, supported facts, gold answers, and expected actions.
 - `Evidence_Audit`: the exact review text used to verify the original gold-evidence annotations.
 - `Corpus_100`: the portable 100-review corpus used by both retrievers.
 - `ReadMe`: workbook-level notes. Some counts in this sheet describe an earlier 30/38-question version; the table itself contains the authoritative Q01–Q55 set.
