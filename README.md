@@ -1,4 +1,4 @@
-# Clothing Review RAG: Fit and Quality Question Answering
+# Clothing Review RAG
 
 PE6201 Individual Project — Xiaonan Zhao
 
