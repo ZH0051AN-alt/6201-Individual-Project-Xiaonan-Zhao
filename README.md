@@ -201,3 +201,57 @@ This is the post-run human-audited version of the same experiment. Its `Groundin
 ## Scope and limitations
 
 This is a course prototype over a fixed 100-review corpus. It answers only evidence-supported fit and quality questions for the selected products. It should not be used to predict returns, make autonomous purchase decisions, provide universal sizing advice, or infer facts not stated in the reviews.
+
+## Product documentation
+
+### Persona
+
+**Primary user:** an online clothing shopper viewing a specific product who wants a fast, traceable answer about fit or garment quality without reading every review. The shopper needs a concise evidence summary and must be told when the selected product's reviews do not contain enough evidence. This prototype is decision support only: it does not predict returns or make a buy/no-buy recommendation.
+
+### Inputs
+
+| Input | Role in the product |
+|---|---|
+| `Clothing_ID` | Selects the product and prevents evidence from other products entering the answer. |
+| Natural-language question | A fit or quality question, such as whether an item runs small or whether its material feels durable. |
+| Review corpus | 100 cleaned reviews from 10 products, with stable `Review_IDs`; only reviews matching the requested `Clothing_ID` are eligible. |
+| Evaluation key | 55 fixed questions with answerability labels and gold evidence. It is used for scoring only; gold answers and labels are not sent to GPT. |
+
+### Outputs
+
+- **User-facing output:** a concise, evidence-supported answer with `Review_ID` citations drawn only from the retrieved Top-3 reviews.
+- **Safe fallback:** the exact refusal `I don't know. The available reviews do not provide enough evidence.` when the retrieved evidence is insufficient.
+- **Evaluation output:** an Excel workbook containing both retrievers' Top-3 results, GPT answers, citations, token and cost fields, error tables, and the manual grounding-audit sheet.
+
+### High-level product architecture
+
+```mermaid
+flowchart TD
+    A["Shopper input: Clothing_ID and fit or quality question"] --> B["Python code: validate data and filter reviews by Clothing_ID"]
+    B --> C["Retrieval tools: TF-IDF baseline and Sentence Transformers semantic Top-3"]
+    C --> D["Code logic: score both retrievers and select semantic Top-3 for generation"]
+    D --> E["Prompt builder: question, evidence, allowed Review_IDs, and refusal rule"]
+    E --> F["External intelligence: GPT-4o mini through OpenRouter"]
+    F --> G["Pydantic and rule checks: JSON, citations, refusal, and API completion"]
+    G --> H["User output: cited answer or evidence-based refusal"]
+    G --> I["Evaluation output: metrics, cost, error analysis, and human grounding audit"]
+```
+
+The reproducible code path uses pandas/openpyxl for data and export, scikit-learn for TF-IDF, `sentence-transformers/multi-qa-MiniLM-L6-cos-v1` for semantic retrieval, and Pydantic plus deterministic checks for output validation. GPT-4o mini is the only external intelligence component. It receives only the question and semantic Top-3 reviews; it does not receive the gold answer, access the web, or see reviews from another product. TF-IDF is an evaluation baseline rather than a second source for the generated answer.
+
+### Metrics targeted and metrics reached
+
+The targets below are prototype acceptance criteria and decision rules. The reached values come from the included 55-question reference run (47 answerable questions and 8 intentionally unanswerable controls).
+
+| Metric | Target / decision rule | Reached in the reference run | Assessment |
+|---|---|---|---|
+| Overall semantic Hit@3 | Exceed TF-IDF on the same 47 answerable questions | **70.2%** vs TF-IDF **61.7%** (+8.5 percentage points) | Met |
+| Paraphrase semantic Hit@3 | Exceed TF-IDF on the 22 answerable low-keyword-overlap questions | **50.0%** vs TF-IDF **31.8%** (+18.2 points) | Met |
+| Semantic mean Recall@3 | At least match TF-IDF overall | **56.7%** vs TF-IDF **56.0%** (+0.7 points) | Marginally met |
+| API completion and mechanical validity | 100% of 55 questions complete; 100% pass format, refusal, and citation-ID checks | **55/55** API calls completed and **55/55** mechanical checks passed | Met |
+| Correct refusal on unanswerable questions | 100% | **8/8 (100%)** | Met |
+| False refusal on answerable questions | 0% | **2/47 (4.3%)** | Not met |
+| No unsupported facts | 100% of outputs grounded in the supplied Top-3 evidence | **44/55 (80.0%)** overall; **34/45 (75.6%)** among generated answers | Not met |
+| LLM cost observability | Record tokens and estimated cost for every completed call; monitoring metric, not a pass threshold | **US$0.0068637** total, about **US$0.0001248 per question** | Measured |
+
+**Interpretation and critique.** The semantic retriever achieved the main robustness goal on overall and paraphrase Hit@3, but its overall Recall@3 advantage was only 0.7 points. On the original 25 answerable questions, semantic Recall@3 was lower than TF-IDF (62.7% vs 77.3%), so the result supports semantic retrieval mainly under paraphrase rather than as a universal replacement for keyword search. Operational reliability was strong, but 55/55 valid API responses did not guarantee factual quality: the 80.0% grounding result missed the 100% safety target. The system is therefore a reproducible course prototype, not a production-ready shopping assistant.
