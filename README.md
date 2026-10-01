@@ -26,12 +26,6 @@ The four Excel workbooks are explained in more detail in [Explainer files](#expl
 
 ## Fastest way to run the project in Google Colab
 
-### Prerequisites
-
-- A Google account that can open Google Colab.
-- Internet access. The first run downloads the Sentence Transformers model.
-- An active [OpenRouter](https://openrouter.ai/) account, an OpenRouter API key (normally beginning with `sk-or-`), and enough credit for 55 small GPT calls.
-
 ### Run instructions
 
 1. Click the **Open in Google Colab** badge above. If necessary, sign in to Google and choose **Open notebook**.
